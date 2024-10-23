@@ -113,7 +113,7 @@ public class Main {
 
             System.out.printf("Total Fee: LKR %.2f, Tax: LKR %.2f, Final Amount: LKR %.2f%n", totalFee, tax, finalAmount);
 
-            String invoiceID = UUID.randomUUID().toString();
+            String invoiceID = generateInvoiceID(); // Updated to use sequential invoice ID
             Invoice invoice = new Invoice(invoiceID, appointment, totalFee, tax);
             invoice.generateInvoice();
 
@@ -131,8 +131,12 @@ public class Main {
             System.out.println("Invalid treatment option selected.");
         }
     }
+    private static int invoiceCounter = 0;
+    private static String generateInvoiceID() {
+        invoiceCounter++;
+        return String.format("Inv%04d", invoiceCounter);
+    }
 
-    // 2. Update appointment details
     private static void updateAppointment() {
         System.out.print("Enter Appointment ID to update: ");
         String appointmentID = scanner.nextLine();
