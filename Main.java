@@ -6,12 +6,12 @@ public class Main {
 
     public static void main(String[] args) {
         // Sample data for Dermatologists' available dates and times
-        List<String> availableDates = Arrays.asList("Monday", "Wednesday", "Friday", "Saturday");
-        List<String> availableTimesMonday = Arrays.asList("10:00am - 01:00pm");
-        List<String> availableTimesFriday = Arrays.asList("04:00pm - 08:00pm");
+        List<String> availableDates1 = Arrays.asList("Monday", "Friday");
+        List<String> availableTimesMonday = Arrays.asList("10:00 am - 01:00 pm");
+        List<String> availableTimesFriday = Arrays.asList("04:00 pm - 08:00 pm");
 
-        Dermatologist dermatologist1 = new Dermatologist("Dr. Nayanathari", "thaari@aurora.com", "0123456789", "DR001", availableDates, availableTimesMonday);
-        Dermatologist dermatologist2 = new Dermatologist("Dr. Nawariyan", "nawariyan@aurora.com", "9876543210", "DR002", availableDates, availableTimesFriday);
+        Dermatologist dermatologist1 = new Dermatologist("Dr. Nayanathari", "thaari@aurora.com", "0123456789", "DR001", availableDates1, availableTimesMonday);
+        Dermatologist dermatologist2 = new Dermatologist("Dr. Nawariyan", "nawariyan@aurora.com", "9876543210", "DR002", availableDates1, availableTimesFriday);
 
         // Treatment options and prices
         Map<Integer, String> treatmentOptions = new HashMap<>();
@@ -25,7 +25,7 @@ public class Main {
         treatmentPrices.put("Mole Removal", 3850.00);
 
         while (true) {
-            System.out.println("\n++++++++++Welcome to Aurora Skin Care!+++++++++++");
+            System.out.println("\n++++++++++ Welcome to Aurora Skin Care! +++++++++++");
             System.out.println("=================================================");
             System.out.println("Select an option:");
             System.out.println("1. Make an appointment");
@@ -75,9 +75,14 @@ public class Main {
         int dermatologistChoice = scanner.nextInt();
         Dermatologist selectedDermatologist = dermatologistChoice == 1 ? dermatologist1 : dermatologist2;
 
-        System.out.println("Available dates: " + selectedDermatologist.getAvailability());
+        System.out.println("Available dates: " + selectedDermatologist.getAvailableDates());
         System.out.print("Enter preferred date: ");
         String appointmentDate = scanner.next();
+
+        System.out.println("Available times: ");
+        List<String> timeSlots = generateTimeSlots("10:00 am", "01:00 pm", 15);  // Example for time slot generation
+        timeSlots.forEach(System.out::println);
+
         System.out.print("Enter preferred time: ");
         String appointmentTime = scanner.next();
 
@@ -208,5 +213,46 @@ public class Main {
             }
         }
         return null;
+    }
+
+    // Generate available time slots based on start time, end time, and session duration
+    private static List<String> generateTimeSlots(String startTime, String endTime, int sessionDuration) {
+        List<String> timeSlots = new ArrayList<>();
+
+        // Ensure start and end times follow a consistent format with space between time and AM/PM
+        String[] startParts = startTime.trim().split(":|\\s");
+        String[] endParts = endTime.trim().split(":|\\s");
+
+        // Convert start hour to 24-hour format
+        int startHour = Integer.parseInt(startParts[0]);
+        if (startParts[2].equalsIgnoreCase("pm") && startHour != 12) {
+            startHour += 12; // Convert PM to 24-hour format
+        } else if (startParts[2].equalsIgnoreCase("am") && startHour == 12) {
+            startHour = 0; // Handle midnight (12 AM)
+        }
+        int startMinute = Integer.parseInt(startParts[1]);
+
+        // Convert end hour to 24-hour format
+        int endHour = Integer.parseInt(endParts[0]);
+        if (endParts[2].equalsIgnoreCase("pm") && endHour != 12) {
+            endHour += 12;
+        } else if (endParts[2].equalsIgnoreCase("am") && endHour == 12) {
+            endHour = 0;
+        }
+        int endMinute = Integer.parseInt(endParts[1]);
+
+        // Generate time slots in 15-minute intervals
+        while (startHour < endHour || (startHour == endHour && startMinute < endMinute)) {
+            timeSlots.add(String.format("%02d:%02d", (startHour % 12 == 0 ? 12 : startHour % 12), startMinute)
+                    + (startHour < 12 || startHour == 24 ? "am" : "pm"));
+
+            startMinute += sessionDuration;
+            if (startMinute >= 60) {
+                startMinute -= 60;
+                startHour++;
+            }
+        }
+
+        return timeSlots;
     }
 }
