@@ -158,7 +158,7 @@ public class Main {
         for (Appointment appointment : appointments) {
             if (appointment.getAppointmentDate().equals(date)) {
                 System.out.println("Appointment ID: " + appointment.getAppointmentID() +
-                        ", Patient: " + appointment.getPatient().getName() +
+                        ", Patient: " +  appointment.getPatient().getName() +
                         ", Time: " + appointment.getAppointmentTime());
                 found = true;
             }
