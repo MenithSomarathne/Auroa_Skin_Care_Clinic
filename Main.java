@@ -6,7 +6,7 @@ public class Main {
 
     public static void main(String[] args) {
         // Sample data for Dermatologists' available dates and times
-        List<String> availableDates1 = Arrays.asList("Monday", "Friday");
+        List<String> availableDates1 = Arrays.asList("Monday","Wednesday", "Friday","Saturday");
         List<String> availableTimesMonday = Arrays.asList("10:00 am - 01:00 pm");
         List<String> availableTimesFriday = Arrays.asList("04:00 pm - 08:00 pm");
 
@@ -113,22 +113,29 @@ public class Main {
             double tax = treatment.addTax();
             double finalAmount = totalFee + tax;
 
-            System.out.printf("Total Fee: LKR %.2f, Tax: LKR %.2f, Final Amount: LKR %.2f%n", totalFee, tax, finalAmount);
+            System.out.println("===================Invoice =====================");
+
+
 
             String invoiceID = generateInvoiceID(); // Updated to use sequential invoice ID
-            Invoice invoice = new Invoice(invoiceID, appointment, totalFee, tax);
-            invoice.generateInvoice();
-
-            payment = new Payment(UUID.randomUUID().toString(), finalAmount);
-            payment.processPayment();
+//            Invoice invoice = new Invoice(invoiceID, appointment, totalFee, tax);
+//            invoice.generateInvoice();
+//
+//            payment = new Payment(UUID.randomUUID().toString(), finalAmount);
+//            payment.processPayment();
 
             // Output in desired format
-            System.out.printf("Invoice ID: %s%n", invoiceID);
-            System.out.printf("Appointment ID: %s%n", appointmentID);
-            System.out.printf("Total Fee: %.2f%n", totalFee);
-            System.out.printf("Tax: %.2f%n", tax);
-            System.out.printf("Final Amount: %.2f%n", finalAmount);
-            System.out.printf("Payment of LKR %.2f processed. Status: Paid%n", finalAmount);
+            System.out.printf("## Invoice ID: %s%n", invoiceID );
+            System.out.printf("## Appointment ID: %s%n", appointmentID);
+            System.out.printf("## Total Fee: %.2f%n", totalFee);
+            System.out.printf("## Tax: %.2f%n", tax);
+            System.out.printf("## Final Amount: %.2f%n", finalAmount);
+//            System.out.printf("Payment of LKR %.2f processed....", finalAmount);
+            System.out.println("## Status: Paid......");
+
+            System.out.println("\n................Thank you...............");
+
+            System.out.println("================================================");
         } else {
             System.out.println("Invalid treatment option selected.");
         }

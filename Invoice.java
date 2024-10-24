@@ -14,13 +14,13 @@ public class Invoice {
     }
 
     public void generateInvoice() {
-        System.out.println("++++++++++++++++++++++++++++++++++++");
-        System.out.println("+ Invoice ID: " + invoiceID );
-        System.out.println("+ Appointment ID: " + appointment );
-        System.out.println("+ Total Fee: " + totalFee);
-        System.out.println("+ Tax: " + tax);
-        System.out.println("+ Final Amount: " + finalAmount);
-        System.out.println("++++++++++++++++++++++++++++++++++++");
+//        System.out.println("++++++++++++++++++++++++++++++++++++");
+//        System.out.println("+ Invoice ID: " + invoiceID );
+//        System.out.println("+ Appointment ID: " + appointment );
+//        System.out.println("+ Total Fee: " + totalFee);
+//        System.out.println("+ Tax: " + tax);
+//        System.out.println("+ Final Amount: " + finalAmount);
+//        System.out.println("++++++++++++++++++++++++++++++++++++");
     }
 }
 
