@@ -18,11 +18,13 @@ public class Main {
         treatmentOptions.put(1, "Acne Treatment");
         treatmentOptions.put(2, "Skin Whitening");
         treatmentOptions.put(3, "Mole Removal");
+        treatmentOptions.put(4, "Leaser Treatment");
 
         Map<String, Double> treatmentPrices = new HashMap<>();
         treatmentPrices.put("Acne Treatment", 2750.00);
         treatmentPrices.put("Skin Whitening", 7650.00);
         treatmentPrices.put("Mole Removal", 3850.00);
+        treatmentPrices.put("Leaser Treatment", 12500.00);
 
         while (true) {
             System.out.println("\n++++++++++ Welcome to Aurora Skin Care! +++++++++++");

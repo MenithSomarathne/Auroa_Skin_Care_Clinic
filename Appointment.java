@@ -26,22 +26,21 @@ public class Appointment {
         System.out.println("Appointment updated to " + appointmentDate + " at " + appointmentTime);
     }
 
-    // Getter for appointmentDate
+
     public String getAppointmentDate() {
         return appointmentDate;
     }
 
-    // Getter for appointmentTime
+
     public String getAppointmentTime() {
         return appointmentTime;
     }
 
-    // Getter for patient
     public Patient getPatient() {
         return patient;
     }
 
-    // Getter for appointmentID
+
     public String getAppointmentID() {
         return appointmentID;
     }
