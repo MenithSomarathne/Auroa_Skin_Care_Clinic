@@ -7,10 +7,10 @@ class Main {
     public static void main(String[] args) {
 
         Map<String, List<String>> sharedAvailableTimes = new HashMap<>();
-        sharedAvailableTimes.put("Monday", Arrays.asList("10:00 am - 01:00 pm"));
-        sharedAvailableTimes.put("Wednesday", Arrays.asList("02:00 pm - 05:00 pm"));
-        sharedAvailableTimes.put("Friday", Arrays.asList("04:00 pm - 08:00 pm"));
-        sharedAvailableTimes.put("Saturday", Arrays.asList("09:00 am - 01:00 pm"));
+        sharedAvailableTimes.put("Monday", Arrays.asList("10:00 am","10:15 am","10:30 am","10:45 am","11:00 am","11:15 am","11:30 am","11:45 am","12:00 pm","12:45 pm"));
+        sharedAvailableTimes.put("Wednesday", Arrays.asList("02:00 pm","02:15 pm","02:30 pm","02:45 pm","03:00 pm","03:15 am","03:30 pm","03:45 pm","04:00 pm","04:45 pm"));
+        sharedAvailableTimes.put("Friday", Arrays.asList("04:00 pm","04:15 pm","04:30 pm","04:45 pm","05:00 pm","05:15 pm","05:30 pm","05:45 pm","06:00 pm","06:15 pm","06:30 pm","06:45 pm","07:00 pm","07:15 pm","07:30 pm","07:45 pm"));
+        sharedAvailableTimes.put("Saturday", Arrays.asList("09:00 am","09:15 am","09:30 am","09:45 am","10:00 am","10:15 am","10:30 am","10:45 am","11:00 am","11:15 am","11:30 am","11:45 am","12:00 pm","12:45 pm"));
 
         // Creating Dermatologists
         Dermatologist dermatologist1 = new Dermatologist("Dr. Nayanathari", "thaari@aurora.com", "0123456789", "DR001", sharedAvailableTimes);
