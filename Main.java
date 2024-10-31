@@ -1,31 +1,35 @@
 import java.util.*;
 
-public class Main {
+class Main {
     private static List<Appointment> appointments = new ArrayList<>();
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        // Sample data for Dermatologists' available dates and times
-        List<String> availableDates1 = Arrays.asList("Monday","Wednesday", "Friday","Saturday");
-        List<String> availableTimesMonday = Arrays.asList("10:00 am - 01:00 pm");
-        List<String> availableTimesFriday = Arrays.asList("04:00 pm - 08:00 pm");
 
-        Dermatologist dermatologist1 = new Dermatologist("Dr. Nayanathari", "thaari@aurora.com", "0123456789", "DR001", availableDates1, availableTimesMonday);
-        Dermatologist dermatologist2 = new Dermatologist("Dr. Nawariyan", "nawariyan@aurora.com", "9876543210", "DR002", availableDates1, availableTimesFriday);
+        Map<String, List<String>> sharedAvailableTimes = new HashMap<>();
+        sharedAvailableTimes.put("Monday", Arrays.asList("10:00 am - 01:00 pm"));
+        sharedAvailableTimes.put("Wednesday", Arrays.asList("02:00 pm - 05:00 pm"));
+        sharedAvailableTimes.put("Friday", Arrays.asList("04:00 pm - 08:00 pm"));
+        sharedAvailableTimes.put("Saturday", Arrays.asList("09:00 am - 01:00 pm"));
+
+        // Creating Dermatologists
+        Dermatologist dermatologist1 = new Dermatologist("Dr. Nayanathari", "thaari@aurora.com", "0123456789", "DR001", sharedAvailableTimes);
+        Dermatologist dermatologist2 = new Dermatologist("Dr. Nawariyan", "nawariyan@aurora.com", "9876543210", "DR002", sharedAvailableTimes);
 
         // Treatment options and prices
         Map<Integer, String> treatmentOptions = new HashMap<>();
         treatmentOptions.put(1, "Acne Treatment");
         treatmentOptions.put(2, "Skin Whitening");
         treatmentOptions.put(3, "Mole Removal");
-        treatmentOptions.put(4, "Leaser Treatment");
+        treatmentOptions.put(4, "Laser Treatment");
 
         Map<String, Double> treatmentPrices = new HashMap<>();
         treatmentPrices.put("Acne Treatment", 2750.00);
         treatmentPrices.put("Skin Whitening", 7650.00);
         treatmentPrices.put("Mole Removal", 3850.00);
-        treatmentPrices.put("Leaser Treatment", 12500.00);
+        treatmentPrices.put("Laser Treatment", 12500.00);
 
+        // Main loop for user options
         while (true) {
             System.out.println("\n++++++++++ Welcome to Aurora Skin Care! +++++++++++");
             System.out.println("=================================================");
@@ -71,75 +75,71 @@ public class Main {
         String phoneNumber = scanner.nextLine();
         System.out.print("NIC: ");
         String NIC = scanner.nextLine();
+
         Patient patient = new Patient(patientName, email, phoneNumber, NIC);
 
         System.out.println("Choose dermatologist (1 for Dr. Nayanathari, 2 for Dr. Nawariyan): ");
         int dermatologistChoice = scanner.nextInt();
+        scanner.nextLine();
         Dermatologist selectedDermatologist = dermatologistChoice == 1 ? dermatologist1 : dermatologist2;
 
         System.out.println("Available dates: " + selectedDermatologist.getAvailableDates());
-        System.out.print("Enter preferred date: ");
-        String appointmentDate = scanner.next();
+        System.out.print("Enter preferred date (e.g., Monday): ");
+        String appointmentDate = scanner.nextLine();
 
-        System.out.println("Available times: ");
-        List<String> timeSlots = generateTimeSlots("10:00 am", "01:00 pm", 15);  // Example for time slot generation
-        timeSlots.forEach(System.out::println);
+        if (selectedDermatologist.getAvailableTimes().containsKey(appointmentDate)) {
+            List<String> timeSlots = selectedDermatologist.getAvailableTimes().get(appointmentDate);
+            System.out.println("Available times for " + appointmentDate + ":");
+            timeSlots.forEach(System.out::println);
 
-        System.out.print("Enter preferred time: ");
-        String appointmentTime = scanner.next();
+            System.out.print("Enter preferred time (e.g., 10:15 am): ");
+            String appointmentTime = scanner.nextLine();
 
-        String appointmentID = "App" + (new Random().nextInt(1,10000) + 1);  //Generated ID
-        Appointment appointment = new Appointment(appointmentID, appointmentDate, appointmentTime, patient, selectedDermatologist, "");
-        appointment.makeAppointment();
-        appointments.add(appointment);
+            String appointmentID = "App" + (new Random().nextInt(1, 10000) + 1);
+            Appointment appointment = new Appointment(appointmentID, appointmentDate, appointmentTime, patient, selectedDermatologist);
+            appointments.add(appointment);
 
-        Payment payment = new Payment(UUID.randomUUID().toString(), 500.00);
-        payment.acceptRegistrationFee();
+            Payment payment = new Payment(UUID.randomUUID().toString(), 500.00);
+            payment.acceptRegistrationFee();
 
-        System.out.println("Select treatment type:");
-        for (Map.Entry<Integer, String> entry : treatmentOptions.entrySet()) {
-            System.out.println(entry.getKey() + ". " + entry.getValue() + ": LKR " + treatmentPrices.get(entry.getValue()));
-        }
+            System.out.println("Select treatment type:");
+            for (Map.Entry<Integer, String> entry : treatmentOptions.entrySet()) {
+                System.out.println(entry.getKey() + ". " + entry.getValue() + ": LKR " + treatmentPrices.get(entry.getValue()));
+            }
 
-        int treatmentChoice = scanner.nextInt();
-        scanner.nextLine();
+            int treatmentChoice = scanner.nextInt();
+            scanner.nextLine();
 
-        if (treatmentOptions.containsKey(treatmentChoice)) {
-            String selectedTreatment = treatmentOptions.get(treatmentChoice);
-            double treatmentPrice = treatmentPrices.get(selectedTreatment);
-            Treatment treatment = new Treatment(selectedTreatment, treatmentPrice);
+            if (treatmentOptions.containsKey(treatmentChoice)) {
+                String selectedTreatment = treatmentOptions.get(treatmentChoice);
+                double treatmentPrice = treatmentPrices.get(selectedTreatment);
+                Treatment treatment = new Treatment(selectedTreatment, treatmentPrice);
 
-            double totalFee = treatment.calculateFinalFee();
-            double tax = treatment.addTax();
-            double finalAmount = totalFee + tax;
+                double totalFee = treatment.calculateFinalFee();
+                double tax = treatment.addTax();
+                double finalAmount = totalFee + tax;
 
-            System.out.println("===================Invoice =====================");
+                System.out.println("===================Invoice =====================");
 
+                String invoiceID = generateInvoiceID();
+                System.out.printf("## Invoice ID: %s%n", invoiceID);
+                System.out.printf("## Appointment ID: %s%n", appointmentID);
+                System.out.printf("## Total Fee: %.2f%n", totalFee);
+                System.out.printf("## Tax: %.2f%n", tax);
+                System.out.printf("## Final Amount: %.2f%n", finalAmount);
+                System.out.println("## Status: Paid......");
 
+                System.out.println("\n................Thank you...............");
 
-            String invoiceID = generateInvoiceID(); // Updated to use sequential invoice ID
-//            Invoice invoice = new Invoice(invoiceID, appointment, totalFee, tax);
-//            invoice.generateInvoice();
-//
-//            payment = new Payment(UUID.randomUUID().toString(), finalAmount);
-//            payment.processPayment();
-
-            // Output in desired format
-            System.out.printf("## Invoice ID: %s%n", invoiceID );
-            System.out.printf("## Appointment ID: %s%n", appointmentID);
-            System.out.printf("## Total Fee: %.2f%n", totalFee);
-            System.out.printf("## Tax: %.2f%n", tax);
-            System.out.printf("## Final Amount: %.2f%n", finalAmount);
-//            System.out.printf("Payment of LKR %.2f processed....", finalAmount);
-            System.out.println("## Status: Paid......");
-
-            System.out.println("\n................Thank you...............");
-
-            System.out.println("================================================");
+                System.out.println("================================================");
+            } else {
+                System.out.println("Invalid treatment option selected.");
+            }
         } else {
-            System.out.println("Invalid treatment option selected.");
+            System.out.println("No available time slots for the selected date.");
         }
     }
+
     private static int invoiceCounter = 0;
     private static String generateInvoiceID() {
         invoiceCounter++;
@@ -162,7 +162,6 @@ public class Main {
         }
     }
 
-    // 3. View appointment details filtered by date
     private static void viewAppointmentsByDate() {
         System.out.print("Enter the date to filter appointments: ");
         String date = scanner.nextLine();
@@ -171,7 +170,7 @@ public class Main {
         for (Appointment appointment : appointments) {
             if (appointment.getAppointmentDate().equals(date)) {
                 System.out.println("Appointment ID: " + appointment.getAppointmentID() +
-                        ", Patient: " +  appointment.getPatient().getName() +
+                        ", Patient: " + appointment.getPatient().getName() +
                         ", Time: " + appointment.getAppointmentTime());
                 found = true;
             }
@@ -182,7 +181,6 @@ public class Main {
         }
     }
 
-    // 4. Search for an appointment using patient name or appointment ID
     private static void searchAppointment() {
         System.out.println("Search by (1) Patient Name or (2) Appointment ID?");
         int searchOption = scanner.nextInt();
@@ -226,46 +224,5 @@ public class Main {
             }
         }
         return null;
-    }
-
-    // Generate available time slots based on start time, end time, and session duration
-    private static List<String> generateTimeSlots(String startTime, String endTime, int sessionDuration) {
-        List<String> timeSlots = new ArrayList<>();
-
-        // Ensure start and end times follow a consistent format with space between time and AM/PM
-        String[] startParts = startTime.trim().split(":|\\s");
-        String[] endParts = endTime.trim().split(":|\\s");
-
-        // Convert start hour to 24-hour format
-        int startHour = Integer.parseInt(startParts[0]);
-        if (startParts[2].equalsIgnoreCase("pm") && startHour != 12) {
-            startHour += 12; // Convert PM to 24-hour format
-        } else if (startParts[2].equalsIgnoreCase("am") && startHour == 12) {
-            startHour = 0; // Handle midnight (12 AM)
-        }
-        int startMinute = Integer.parseInt(startParts[1]);
-
-        // Convert end hour to 24-hour format
-        int endHour = Integer.parseInt(endParts[0]);
-        if (endParts[2].equalsIgnoreCase("pm") && endHour != 12) {
-            endHour += 12;
-        } else if (endParts[2].equalsIgnoreCase("am") && endHour == 12) {
-            endHour = 0;
-        }
-        int endMinute = Integer.parseInt(endParts[1]);
-
-        // Generate time slots in 15-minute intervals
-        while (startHour < endHour || (startHour == endHour && startMinute < endMinute)) {
-            timeSlots.add(String.format("%02d:%02d", (startHour % 12 == 0 ? 12 : startHour % 12), startMinute)
-                    + (startHour < 12 || startHour == 24 ? "am" : "pm"));
-
-            startMinute += sessionDuration;
-            if (startMinute >= 60) {
-                startMinute -= 60;
-                startHour++;
-            }
-        }
-
-        return timeSlots;
     }
 }

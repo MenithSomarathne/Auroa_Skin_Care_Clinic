@@ -1,20 +1,12 @@
-public class Patient extends Person {
+class Patient extends Person {
     private String NIC;
 
-    public Patient(String name, String email, String telephoneNumber, String NIC) {
-        super(name, email, telephoneNumber);
+    public Patient(String name, String email, String phoneNumber, String NIC) {
+        super(name, email, phoneNumber);
         this.NIC = NIC;
     }
 
     public String getNIC() {
         return NIC;
-    }
-
-    public void setNIC(String NIC) {
-        this.NIC = NIC;
-    }
-
-    public void registerForAppointment() {
-        System.out.println("Patient " + getName() + " has registered for an appointment.");
     }
 }

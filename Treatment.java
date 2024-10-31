@@ -1,4 +1,4 @@
-public class Treatment {
+class Treatment {
     private String treatmentType;
     private double treatmentPrice;
 
@@ -12,7 +12,6 @@ public class Treatment {
     }
 
     public double addTax() {
-        double tax = treatmentPrice * 0.025;  // 2.5% tax
-        return tax;
+        return treatmentPrice * 0.15; // Assuming 15% tax
     }
 }
