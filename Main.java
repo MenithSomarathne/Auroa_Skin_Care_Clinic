@@ -87,6 +87,7 @@ class Main {
         System.out.print("Enter preferred date (e.g., Monday): ");
         String appointmentDate = scanner.nextLine();
 
+        // Check if the selected date has available times
         if (selectedDermatologist.getAvailableTimes().containsKey(appointmentDate)) {
             List<String> timeSlots = selectedDermatologist.getAvailableTimes().get(appointmentDate);
             System.out.println("Available times for " + appointmentDate + ":");
@@ -95,50 +96,57 @@ class Main {
             System.out.print("Enter preferred time (e.g., 10:15 am): ");
             String appointmentTime = scanner.nextLine();
 
-            String appointmentID = "App" + (new Random().nextInt(1, 10000) + 1);
-            Appointment appointment = new Appointment(appointmentID, appointmentDate, appointmentTime, patient, selectedDermatologist);
-            appointments.add(appointment);
+            // Validate if the selected time is within available time slots
+            if (timeSlots.contains(appointmentTime)) {
+                String appointmentID = "App" + (new Random().nextInt(1, 10000) + 1);
+                Appointment appointment = new Appointment(appointmentID, appointmentDate, appointmentTime, patient, selectedDermatologist);
+                appointments.add(appointment);
 
-            Payment payment = new Payment(UUID.randomUUID().toString(), 500.00);
-            payment.acceptRegistrationFee();
+                // Proceed with the payment and invoice generation steps
+                Payment payment = new Payment(UUID.randomUUID().toString(), 500.00);
+                payment.acceptRegistrationFee();
 
-            System.out.println("Select treatment type:");
-            for (Map.Entry<Integer, String> entry : treatmentOptions.entrySet()) {
-                System.out.println(entry.getKey() + ". " + entry.getValue() + ": LKR " + treatmentPrices.get(entry.getValue()));
-            }
+                System.out.println("Select treatment type:");
+                for (Map.Entry<Integer, String> entry : treatmentOptions.entrySet()) {
+                    System.out.println(entry.getKey() + ". " + entry.getValue() + ": LKR " + treatmentPrices.get(entry.getValue()));
+                }
 
-            int treatmentChoice = scanner.nextInt();
-            scanner.nextLine();
+                int treatmentChoice = scanner.nextInt();
+                scanner.nextLine();
 
-            if (treatmentOptions.containsKey(treatmentChoice)) {
-                String selectedTreatment = treatmentOptions.get(treatmentChoice);
-                double treatmentPrice = treatmentPrices.get(selectedTreatment);
-                Treatment treatment = new Treatment(selectedTreatment, treatmentPrice);
+                if (treatmentOptions.containsKey(treatmentChoice)) {
+                    String selectedTreatment = treatmentOptions.get(treatmentChoice);
+                    double treatmentPrice = treatmentPrices.get(selectedTreatment);
+                    Treatment treatment = new Treatment(selectedTreatment, treatmentPrice);
 
-                double totalFee = treatment.calculateFinalFee();
-                double tax = treatment.addTax();
-                double finalAmount = totalFee + tax;
+                    double totalFee = treatment.calculateFinalFee();
+                    double tax = treatment.addTax();
+                    double finalAmount = totalFee + tax;
 
-                System.out.println("===================Invoice =====================");
+                    System.out.println("===================Invoice =====================");
 
-                String invoiceID = generateInvoiceID();
-                System.out.printf("## Invoice ID: %s%n", invoiceID);
-                System.out.printf("## Appointment ID: %s%n", appointmentID);
-                System.out.printf("## Total Fee: %.2f%n", totalFee);
-                System.out.printf("## Tax: %.2f%n", tax);
-                System.out.printf("## Final Amount: %.2f%n", finalAmount);
-                System.out.println("## Status: Paid......");
+                    String invoiceID = generateInvoiceID();
+                    System.out.printf("## Invoice ID: %s%n", invoiceID);
+                    System.out.printf("## Appointment ID: %s%n", appointmentID);
+                    System.out.printf("## Total Fee: %.2f%n", totalFee);
+                    System.out.printf("## Tax: %.2f%n", tax);
+                    System.out.printf("## Final Amount: %.2f%n", finalAmount);
+                    System.out.println("## Status: Paid......");
 
-                System.out.println("\n................Thank you...............");
+                    System.out.println("\n................Thank you...............");
 
-                System.out.println("================================================");
+                    System.out.println("================================================");
+                } else {
+                    System.out.println("Invalid treatment option selected.");
+                }
             } else {
-                System.out.println("Invalid treatment option selected.");
+                System.out.println("Invalid time. Please select a valid time for " + appointmentDate + ".");
             }
         } else {
             System.out.println("No available time slots for the selected date.");
         }
     }
+
 
     private static int invoiceCounter = 0;
     private static String generateInvoiceID() {
