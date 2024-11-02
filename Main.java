@@ -191,37 +191,43 @@ class Main {
 
     private static void searchAppointment() {
         System.out.println("Search by (1) Patient Name or (2) Appointment ID?");
-        int searchOption = scanner.nextInt();
-        scanner.nextLine();
 
-        if (searchOption == 1) {
-            System.out.print("Enter patient name: ");
-            String patientName = scanner.nextLine();
+        if (scanner.hasNextInt()) {
+            int searchOption = scanner.nextInt();
+            scanner.nextLine();
 
-            for (Appointment appointment : appointments) {
-                if (appointment.getPatient().getName().equalsIgnoreCase(patientName)) {
-                    System.out.println("Appointment found: ID - " + appointment.getAppointmentID() +
+            if (searchOption == 1) {
+                System.out.print("Enter patient name: ");
+                String patientName = scanner.nextLine();
+
+                for (Appointment appointment : appointments) {
+                    if (appointment.getPatient().getName().equalsIgnoreCase(patientName)) {
+                        System.out.println("Appointment found: ID - " + appointment.getAppointmentID() +
+                                ", Date: " + appointment.getAppointmentDate() +
+                                ", Time: " + appointment.getAppointmentTime());
+                        return;
+                    }
+                }
+                System.out.println("No appointments found for the given patient name.");
+
+            } else if (searchOption == 2) {
+                System.out.print("Enter appointment ID: ");
+                String appointmentID = scanner.nextLine();
+                Appointment appointment = findAppointmentByID(appointmentID);
+
+                if (appointment != null) {
+                    System.out.println("Appointment found: Patient - " + appointment.getPatient().getName() +
                             ", Date: " + appointment.getAppointmentDate() +
                             ", Time: " + appointment.getAppointmentTime());
-                    return;
+                } else {
+                    System.out.println("No appointments found for the given appointment ID.");
                 }
-            }
-            System.out.println("No appointments found for the given patient name.");
-
-        } else if (searchOption == 2) {
-            System.out.print("Enter appointment ID: ");
-            String appointmentID = scanner.nextLine();
-            Appointment appointment = findAppointmentByID(appointmentID);
-
-            if (appointment != null) {
-                System.out.println("Appointment found: Patient - " + appointment.getPatient().getName() +
-                        ", Date: " + appointment.getAppointmentDate() +
-                        ", Time: " + appointment.getAppointmentTime());
             } else {
-                System.out.println("No appointments found for the given appointment ID.");
+                System.out.println("Invalid search option. Please enter 1 or 2.");
             }
         } else {
-            System.out.println("Invalid search option.");
+            System.out.println("Invalid input! Please enter a number (1 or 2).");
+            scanner.nextLine(); // Clear invalid input
         }
     }
 
