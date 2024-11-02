@@ -7,10 +7,10 @@ class Main {
     public static void main(String[] args) {
 
         Map<String, List<String>> sharedAvailableTimes = new HashMap<>();
-        sharedAvailableTimes.put("Monday", Arrays.asList("10:00 am","10:15 am","10:30 am","10:45 am","11:00 am","11:15 am","11:30 am","11:45 am","12:00 pm","12:45 pm"));
-        sharedAvailableTimes.put("Wednesday", Arrays.asList("02:00 pm","02:15 pm","02:30 pm","02:45 pm","03:00 pm","03:15 am","03:30 pm","03:45 pm","04:00 pm","04:45 pm"));
-        sharedAvailableTimes.put("Friday", Arrays.asList("04:00 pm","04:15 pm","04:30 pm","04:45 pm","05:00 pm","05:15 pm","05:30 pm","05:45 pm","06:00 pm","06:15 pm","06:30 pm","06:45 pm","07:00 pm","07:15 pm","07:30 pm","07:45 pm"));
-        sharedAvailableTimes.put("Saturday", Arrays.asList("09:00 am","09:15 am","09:30 am","09:45 am","10:00 am","10:15 am","10:30 am","10:45 am","11:00 am","11:15 am","11:30 am","11:45 am","12:00 pm","12:45 pm"));
+        sharedAvailableTimes.put("Monday", Arrays.asList("10:00 am", "10:15 am", "10:30 am", "10:45 am", "11:00 am", "11:15 am", "11:30 am", "11:45 am", "12:00 pm", "12:45 pm"));
+        sharedAvailableTimes.put("Wednesday", Arrays.asList("02:00 pm", "02:15 pm", "02:30 pm", "02:45 pm", "03:00 pm", "03:15 am", "03:30 pm", "03:45 pm", "04:00 pm", "04:45 pm"));
+        sharedAvailableTimes.put("Friday", Arrays.asList("04:00 pm", "04:15 pm", "04:30 pm", "04:45 pm", "05:00 pm", "05:15 pm", "05:30 pm", "05:45 pm", "06:00 pm", "06:15 pm", "06:30 pm", "06:45 pm", "07:00 pm", "07:15 pm", "07:30 pm", "07:45 pm"));
+        sharedAvailableTimes.put("Saturday", Arrays.asList("09:00 am", "09:15 am", "09:30 am", "09:45 am", "10:00 am", "10:15 am", "10:30 am", "10:45 am", "11:00 am", "11:15 am", "11:30 am", "11:45 am", "12:00 pm", "12:45 pm"));
 
         // Creating Dermatologists
         Dermatologist dermatologist1 = new Dermatologist("Dr. Nayanathari", "thaari@aurora.com", "0123456789", "DR001", sharedAvailableTimes);
@@ -96,6 +96,7 @@ class Main {
             System.out.print("Enter preferred time (e.g., 10:15 am): ");
             String appointmentTime = scanner.nextLine();
 
+
             // Validate if the selected time is within available time slots
             if (timeSlots.contains(appointmentTime)) {
                 String appointmentID = "App" + (new Random().nextInt(1, 10000) + 1);
@@ -128,9 +129,9 @@ class Main {
                     String invoiceID = generateInvoiceID();
                     System.out.printf("## Invoice ID: %s%n", invoiceID);
                     System.out.printf("## Appointment ID: %s%n", appointmentID);
-                    System.out.printf("## Total Fee: %.2f%n", totalFee);
-                    System.out.printf("## Tax: %.2f%n", tax);
-                    System.out.printf("## Final Amount: %.2f%n", finalAmount);
+                    System.out.printf("## Total Fee: LKR %.2f%n", totalFee);
+                    System.out.printf("## Tax: LKR %.2f%n", tax);
+                    System.out.printf("## Final Amount: LKR %.2f%n", finalAmount);
                     System.out.println("## Status: Paid......");
 
                     System.out.println("\n................Thank you...............");
@@ -149,6 +150,7 @@ class Main {
 
 
     private static int invoiceCounter = 0;
+
     private static String generateInvoiceID() {
         invoiceCounter++;
         return String.format("Inv%04d", invoiceCounter);
@@ -160,15 +162,36 @@ class Main {
         Appointment appointment = findAppointmentByID(appointmentID);
 
         if (appointment != null) {
-            System.out.print("Enter new date: ");
+            Dermatologist selectedDermatologist = appointment.getDermatologist();
+
+            System.out.println("Available dates: " + selectedDermatologist.getAvailableDates());
+            System.out.print("Enter new date (e.g., Monday): ");
             String newDate = scanner.nextLine();
-            System.out.print("Enter new time: ");
-            String newTime = scanner.nextLine();
-            appointment.updateAppointment(newDate, newTime);
+
+            // Check if the selected date has available times
+            if (selectedDermatologist.getAvailableTimes().containsKey(newDate)) {
+                List<String> timeSlots = selectedDermatologist.getAvailableTimes().get(newDate);
+                System.out.println("Available times for " + newDate + ":");
+                timeSlots.forEach(System.out::println);
+
+                System.out.print("Enter new time (e.g., 10:15 am): ");
+                String newTime = scanner.nextLine();
+
+                // Validate if the selected time is within available time slots
+                if (timeSlots.contains(newTime)) {
+                    appointment.updateAppointment(newDate, newTime);
+                    System.out.println("Appointment updated successfully to " + newDate + " at " + newTime);
+                } else {
+                    System.out.println("Invalid time. Please select a valid time for " + newDate + ".");
+                }
+            } else {
+                System.out.println("No available time slots for the selected date.");
+            }
         } else {
             System.out.println("Appointment not found.");
         }
     }
+
 
     private static void viewAppointmentsByDate() {
         System.out.print("Enter the date to filter appointments: ");
@@ -176,10 +199,10 @@ class Main {
         boolean found = false;
 
         for (Appointment appointment : appointments) {
-            if (appointment.getAppointmentDate().equals(date)) {
-                System.out.println("Appointment ID: " + appointment.getAppointmentID() +
+            if (appointment.getApp_Date().equals(date)) {
+                System.out.println("Appointment ID: " + appointment.getApp_ID() +
                         ", Patient: " + appointment.getPatient().getName() +
-                        ", Time: " + appointment.getAppointmentTime());
+                        ", Time: " + appointment.getApp_Time());
                 found = true;
             }
         }
@@ -202,9 +225,9 @@ class Main {
 
                 for (Appointment appointment : appointments) {
                     if (appointment.getPatient().getName().equalsIgnoreCase(patientName)) {
-                        System.out.println("Appointment found: ID - " + appointment.getAppointmentID() +
-                                ", Date: " + appointment.getAppointmentDate() +
-                                ", Time: " + appointment.getAppointmentTime());
+                        System.out.println("Appointment found: ID - " + appointment.getApp_ID() +
+                                ", Date: " + appointment.getApp_Date() +
+                                ", Time: " + appointment.getApp_Time());
                         return;
                     }
                 }
@@ -217,8 +240,8 @@ class Main {
 
                 if (appointment != null) {
                     System.out.println("Appointment found: Patient - " + appointment.getPatient().getName() +
-                            ", Date: " + appointment.getAppointmentDate() +
-                            ", Time: " + appointment.getAppointmentTime());
+                            ", Date: " + appointment.getApp_Date() +
+                            ", Time: " + appointment.getApp_Time());
                 } else {
                     System.out.println("No appointments found for the given appointment ID.");
                 }
@@ -231,9 +254,11 @@ class Main {
         }
     }
 
+
     private static Appointment findAppointmentByID(String appointmentID) {
         for (Appointment appointment : appointments) {
-            if (appointment.getAppointmentID().equals(appointmentID)) {
+            String storedID = appointment.getApp_ID().trim();
+            if (storedID.equals(appointmentID)) {
                 return appointment;
             }
         }
