@@ -29,7 +29,7 @@ class Main {
         treatmentPrices.put("Mole Removal", 3850.00);
         treatmentPrices.put("Laser Treatment", 12500.00);
 
-        // Main loop for user options
+
         while (true) {
             System.out.println("\n++++++++++ Welcome to Aurora Skin Care! +++++++++++");
             System.out.println("=================================================");
@@ -87,8 +87,9 @@ class Main {
         System.out.print("Enter preferred date (e.g., Monday): ");
         String appointmentDate = scanner.nextLine();
 
-        // Check if the selected date has available times
-        if (selectedDermatologist.getAvailableTimes().containsKey(appointmentDate)) {
+ //time check
+        if (selectedDermatologist.getAvailableTimes().containsKey(appointmentDate))
+        {
             List<String> timeSlots = selectedDermatologist.getAvailableTimes().get(appointmentDate);
             System.out.println("Available times for " + appointmentDate + ":");
             timeSlots.forEach(System.out::println);
@@ -96,9 +97,9 @@ class Main {
             System.out.print("Enter preferred time (e.g., 10:15 am): ");
             String appointmentTime = scanner.nextLine();
 
-            // Validate if the selected time is within available time slots
+            // Validate available time slots
             if (timeSlots.contains(appointmentTime)) {
-                // Check if the time slot is already booked
+                // Check time slot is already booked
                 boolean isTimeSlotBooked = appointments.stream()
                         .anyMatch(appt -> appt.getApp_Date().equals(appointmentDate) && appt.getApp_Time().equals(appointmentTime));
 
@@ -111,7 +112,7 @@ class Main {
                 Appointment appointment = new Appointment(appointmentID, appointmentDate, appointmentTime, patient, selectedDermatologist);
                 appointments.add(appointment);
 
-                // Proceed with the payment and invoice generation steps
+
                 Payment payment = new Payment(UUID.randomUUID().toString(), 500.00);
                 payment.acceptRegistrationFee();
 
@@ -187,7 +188,7 @@ class Main {
             System.out.print("Enter new date (e.g., Monday): ");
             String newDate = scanner.nextLine();
 
-            // Check if the selected date has available times
+            // for selected date has available times
             if (selectedDermatologist.getAvailableTimes().containsKey(newDate)) {
                 List<String> timeSlots = selectedDermatologist.getAvailableTimes().get(newDate);
                 System.out.println("Available times for " + newDate + ":");
@@ -196,7 +197,7 @@ class Main {
                 System.out.print("Enter new time (e.g., 10:15 am): ");
                 String newTime = scanner.nextLine();
 
-                // Validate if the selected time is within available time slots
+                // Time availability
                 if (timeSlots.contains(newTime)) {
                     // Check if the new time slot is already booked
                     boolean isTimeSlotTaken = appointments.stream()
@@ -207,7 +208,7 @@ class Main {
                         return;
                     }
 
-                    // If time slot is available, update the appointment
+                    // Time availability update the appointment
                     appointment.updateAppointment(newDate, newTime);
                     System.out.println("Appointment updated successfully to " + newDate + " at " + newTime);
                 } else {
