@@ -96,9 +96,17 @@ class Main {
             System.out.print("Enter preferred time (e.g., 10:15 am): ");
             String appointmentTime = scanner.nextLine();
 
-
             // Validate if the selected time is within available time slots
             if (timeSlots.contains(appointmentTime)) {
+                // Check if the time slot is already booked
+                boolean isTimeSlotBooked = appointments.stream()
+                        .anyMatch(appt -> appt.getApp_Date().equals(appointmentDate) && appt.getApp_Time().equals(appointmentTime));
+
+                if (isTimeSlotBooked) {
+                    System.out.println("The selected time slot is already booked. Please choose a different time.");
+                    return;
+                }
+
                 String appointmentID = "App" + (new Random().nextInt(1, 10000) + 1);
                 Appointment appointment = new Appointment(appointmentID, appointmentDate, appointmentTime, patient, selectedDermatologist);
                 appointments.add(appointment);
@@ -149,6 +157,17 @@ class Main {
     }
 
 
+    private static boolean isTimeSlotAvailable(String date, String time) {
+        for (Appointment appointment : appointments) {
+            if (appointment.getApp_Date().equals(date) && appointment.getApp_Time().equals(time)) {
+                return false; // Time slot is already taken
+            }
+        }
+        return true; // Time slot is available
+    }
+
+
+
     private static int invoiceCounter = 0;
 
     private static String generateInvoiceID() {
@@ -179,6 +198,16 @@ class Main {
 
                 // Validate if the selected time is within available time slots
                 if (timeSlots.contains(newTime)) {
+                    // Check if the new time slot is already booked
+                    boolean isTimeSlotTaken = appointments.stream()
+                            .anyMatch(appt -> appt.getApp_Date().equals(newDate) && appt.getApp_Time().equals(newTime) && !appt.getApp_ID().equals(appointmentID));
+
+                    if (isTimeSlotTaken) {
+                        System.out.println("The selected time slot is already booked. Please choose a different time.");
+                        return;
+                    }
+
+                    // If time slot is available, update the appointment
                     appointment.updateAppointment(newDate, newTime);
                     System.out.println("Appointment updated successfully to " + newDate + " at " + newTime);
                 } else {
@@ -191,6 +220,7 @@ class Main {
             System.out.println("Appointment not found.");
         }
     }
+
 
 
     private static void viewAppointmentsByDate() {
