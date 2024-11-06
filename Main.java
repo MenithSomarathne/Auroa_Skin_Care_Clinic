@@ -87,9 +87,7 @@ class Main {
         System.out.print("Enter preferred date (e.g., Monday): ");
         String appointmentDate = scanner.nextLine();
 
- //time check
-        if (selectedDermatologist.getAvailableTimes().containsKey(appointmentDate))
-        {
+        if (selectedDermatologist.getAvailableTimes().containsKey(appointmentDate)) {
             List<String> timeSlots = selectedDermatologist.getAvailableTimes().get(appointmentDate);
             System.out.println("Available times for " + appointmentDate + ":");
             timeSlots.forEach(System.out::println);
@@ -99,12 +97,13 @@ class Main {
 
             // Validate available time slots
             if (timeSlots.contains(appointmentTime)) {
-                // Check time slot is already booked
+                // Only check for bookings with the same dermatologist
                 boolean isTimeSlotBooked = appointments.stream()
-                        .anyMatch(appt -> appt.getApp_Date().equals(appointmentDate) && appt.getApp_Time().equals(appointmentTime));
+                        .anyMatch(appt -> appt.getDermatologist().equals(selectedDermatologist) &&
+                                appt.getApp_Date().equals(appointmentDate) && appt.getApp_Time().equals(appointmentTime));
 
                 if (isTimeSlotBooked) {
-                    System.out.println("The selected time slot is already booked. Please choose a different time.");
+                    System.out.println("The selected time slot is already booked for this dermatologist. Please choose a different time.");
                     return;
                 }
 
@@ -112,43 +111,44 @@ class Main {
                 Appointment appointment = new Appointment(appointmentID, appointmentDate, appointmentTime, patient, selectedDermatologist);
                 appointments.add(appointment);
 
+                // Payment and treatment selection
+                System.out.println("A registration fee of LKR 500 is required to place the appointment.");
+                double registrationFee = 500.0;
+                double totalFee = registrationFee;
 
-                Payment payment = new Payment(UUID.randomUUID().toString(), 500.00);
-                payment.acceptRegistrationFee();
+                System.out.println("Choose treatment(s) (enter option numbers separated by commas, e.g., 1,2):");
+                treatmentOptions.forEach((option, treatment) -> System.out.println(option + ". " + treatment + " - LKR " + treatmentPrices.get(treatment)));
 
-                System.out.println("Select treatment type:");
-                for (Map.Entry<Integer, String> entry : treatmentOptions.entrySet()) {
-                    System.out.println(entry.getKey() + ". " + entry.getValue() + ": LKR " + treatmentPrices.get(entry.getValue()));
+                String[] selectedTreatments = scanner.nextLine().split(",");
+                List<String> selectedTreatmentNames = new ArrayList<>();
+                double treatmentCost = 0.0;
+
+                for (String treatmentOption : selectedTreatments) {
+                    int option = Integer.parseInt(treatmentOption.trim());
+                    if (treatmentOptions.containsKey(option)) {
+                        String treatmentName = treatmentOptions.get(option);
+                        selectedTreatmentNames.add(treatmentName);
+                        treatmentCost += treatmentPrices.get(treatmentName);
+                    }
                 }
 
-                int treatmentChoice = scanner.nextInt();
-                scanner.nextLine();
+                double taxRate = 0.15;
+                double tax = treatmentCost * taxRate;
+                double finalFee = registrationFee + treatmentCost + tax;
 
-                if (treatmentOptions.containsKey(treatmentChoice)) {
-                    String selectedTreatment = treatmentOptions.get(treatmentChoice);
-                    double treatmentPrice = treatmentPrices.get(selectedTreatment);
-                    Treatment treatment = new Treatment(selectedTreatment, treatmentPrice);
-
-                    double totalFee = treatment.calculateFinalFee();
-                    double tax = treatment.addTax();
-                    double finalAmount = totalFee + tax;
-
-                    System.out.println("===================Invoice =====================");
-
-                    String invoiceID = generateInvoiceID();
-                    System.out.printf("## Invoice ID: %s%n", invoiceID);
-                    System.out.printf("## Appointment ID: %s%n", appointmentID);
-                    System.out.printf("## Total Fee: LKR %.2f%n", totalFee);
-                    System.out.printf("## Tax: LKR %.2f%n", tax);
-                    System.out.printf("## Final Amount: LKR %.2f%n", finalAmount);
-                    System.out.println("## Status: Paid......");
-
-                    System.out.println("\n................Thank you...............");
-
-                    System.out.println("================================================");
-                } else {
-                    System.out.println("Invalid treatment option selected.");
-                }
+                System.out.println("\n--- Invoice ---");
+                System.out.println("Appointment ID: " + appointmentID);
+                System.out.println("Patient: " + patientName);
+                System.out.println("Dermatologist: " + (dermatologistChoice == 1 ? "Dr. Nayanathari" : "Dr. Nawariyan"));
+                System.out.println("Date: " + appointmentDate);
+                System.out.println("Time: " + appointmentTime);
+                System.out.println("Registration Fee: LKR " + registrationFee);
+                System.out.println("Treatments Selected:");
+                selectedTreatmentNames.forEach(treatment -> System.out.println("- " + treatment + " - LKR " + treatmentPrices.get(treatment)));
+                System.out.println("Total Treatment Cost: LKR " + treatmentCost);
+                System.out.println("Tax (15%): LKR " + tax);
+                System.out.println("Final Total: LKR " + finalFee);
+                System.out.println("Appointment placed successfully!");
             } else {
                 System.out.println("Invalid time. Please select a valid time for " + appointmentDate + ".");
             }
@@ -156,6 +156,7 @@ class Main {
             System.out.println("No available time slots for the selected date.");
         }
     }
+
 
 
     private static boolean isTimeSlotAvailable(String date, String time) {
