@@ -137,19 +137,31 @@ class Main {
                 double tax = treatmentCost * taxRate;
                 double finalFee = registrationFee + treatmentCost + tax;
 
-                System.out.println("\n--- Invoice ---");
-                System.out.println("Appointment ID: " + appointmentID);
-                System.out.println("Patient: " + patientName);
-                System.out.println("Dermatologist: " + (dermatologistChoice == 1 ? "Dr. Nayanathari" : "Dr. Nawariyan"));
-                System.out.println("Date: " + appointmentDate);
-                System.out.println("Time: " + appointmentTime);
-                System.out.println("Registration Fee: LKR " + registrationFee);
-                System.out.println("Treatments Selected:");
-                selectedTreatmentNames.forEach(treatment -> System.out.println("- " + treatment + " - LKR " + treatmentPrices.get(treatment)));
-                System.out.println("Total Treatment Cost: LKR " + treatmentCost);
-                System.out.println("Tax (15%): LKR " + tax);
-                System.out.println("Final Total: LKR " + finalFee);
-                System.out.println("Appointment placed successfully!");
+                System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++");
+                System.out.println("|                     Invoice                     |");
+                System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+                String invoiceID = generateInvoiceID();
+                System.out.printf("| %-47s |\n", "Invoice ID: " + invoiceID);
+                System.out.printf("| %-47s |\n", "Appointment ID: " + appointmentID);
+                System.out.printf("| %-47s |\n", "Patient: " + patientName);
+                System.out.printf("| %-47s |\n", String.format("Dermatologist: %s", (dermatologistChoice == 1 ? "Dr. Nayanathari" : "Dr. Nawariyan")));
+                System.out.printf("| %-47s |\n", "Date: " + appointmentDate);
+                System.out.printf("| %-47s |\n", "Time: " + appointmentTime);
+                System.out.printf("| %-47s |\n", String.format("Registration Fee: LKR %.2f", registrationFee));
+
+                System.out.println("| Treatments Selected:                            |");
+                selectedTreatmentNames.forEach(treatment ->
+                        System.out.printf("| %-47s |\n", String.format("- %s - LKR %.2f", treatment, treatmentPrices.get(treatment)))
+                );
+
+                System.out.printf("| %-47s |\n", String.format("Total Treatment Cost: LKR %.2f", treatmentCost));
+                System.out.printf("| %-47s |\n", String.format("Tax (15%%): LKR %.2f", tax));
+                System.out.printf("| %-47s |\n", String.format("Final Total: LKR %.2f", finalFee));
+                System.out.println("| Payment Status: Paid                         |");
+                System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+
             } else {
                 System.out.println("Invalid time. Please select a valid time for " + appointmentDate + ".");
             }
@@ -287,11 +299,11 @@ class Main {
             }
         } else {
             System.out.println("Invalid input! Please enter a number (1 or 2).");
-            scanner.nextLine(); // Clear invalid input
+            scanner.nextLine();
         }
     }
 
-
+    // Find a appointment
     private static Appointment findAppointmentByID(String appointmentID) {
         for (Appointment appointment : appointments) {
             String storedID = appointment.getApp_ID().trim();
