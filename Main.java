@@ -12,11 +12,10 @@ class Main {
         sharedAvailableTimes.put("Friday", Arrays.asList("04:00 pm", "04:15 pm", "04:30 pm", "04:45 pm", "05:00 pm", "05:15 pm", "05:30 pm", "05:45 pm", "06:00 pm", "06:15 pm", "06:30 pm", "06:45 pm", "07:00 pm", "07:15 pm", "07:30 pm", "07:45 pm"));
         sharedAvailableTimes.put("Saturday", Arrays.asList("09:00 am", "09:15 am", "09:30 am", "09:45 am", "10:00 am", "10:15 am", "10:30 am", "10:45 am", "11:00 am", "11:15 am", "11:30 am", "11:45 am", "12:00 pm", "12:45 pm"));
 
-        // Creating Dermatologists
         Dermatologist dermatologist1 = new Dermatologist("Dr. Nayanathari", "thaari@aurora.com", "0123456789", "DR001", sharedAvailableTimes);
         Dermatologist dermatologist2 = new Dermatologist("Dr. Nawariyan", "nawariyan@aurora.com", "9876543210", "DR002", sharedAvailableTimes);
 
-        // Treatment options and prices
+        // Treatment options
         Map<Integer, String> treatmentOptions = new HashMap<>();
         treatmentOptions.put(1, "Acne Treatment");
         treatmentOptions.put(2, "Skin Whitening");
@@ -66,6 +65,8 @@ class Main {
         }
     }
 
+
+    //Make a appointment
     private static void makeAppointment(Dermatologist dermatologist1, Dermatologist dermatologist2, Map<Integer, String> treatmentOptions, Map<String, Double> treatmentPrices) {
         System.out.print("Name: ");
         String patientName = scanner.nextLine();
@@ -177,6 +178,8 @@ class Main {
         return String.format("Inv%04d", invoiceCounter);
     }
 
+
+//    update appointment
     private static void updateAppointment() {
         System.out.print("Enter Appointment ID to update: ");
         String appointmentID = scanner.nextLine();
@@ -224,7 +227,7 @@ class Main {
     }
 
 
-
+//    View appointment
     private static void viewAppointmentsByDate() {
         System.out.print("Enter the date to filter appointments: ");
         String date = scanner.nextLine();
@@ -243,6 +246,8 @@ class Main {
             System.out.println("No appointments found for the given date.");
         }
     }
+
+//    Search appointment
 
     private static void searchAppointment() {
         System.out.println("Search by (1) Patient Name or (2) Appointment ID?");
