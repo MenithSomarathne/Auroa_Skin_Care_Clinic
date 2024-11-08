@@ -5,15 +5,22 @@ class Main {
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-
+        // Each days available times
         Map<String, List<String>> sharedAvailableTimes = new HashMap<>();
-        sharedAvailableTimes.put("Monday", Arrays.asList("10:00 am", "10:15 am", "10:30 am", "10:45 am", "11:00 am", "11:15 am", "11:30 am", "11:45 am", "12:00 pm", "12:45 pm"));
-        sharedAvailableTimes.put("Wednesday", Arrays.asList("02:00 pm", "02:15 pm", "02:30 pm", "02:45 pm", "03:00 pm", "03:15 am", "03:30 pm", "03:45 pm", "04:00 pm", "04:45 pm"));
-        sharedAvailableTimes.put("Friday", Arrays.asList("04:00 pm", "04:15 pm", "04:30 pm", "04:45 pm", "05:00 pm", "05:15 pm", "05:30 pm", "05:45 pm", "06:00 pm", "06:15 pm", "06:30 pm", "06:45 pm", "07:00 pm", "07:15 pm", "07:30 pm", "07:45 pm"));
-        sharedAvailableTimes.put("Saturday", Arrays.asList("09:00 am", "09:15 am", "09:30 am", "09:45 am", "10:00 am", "10:15 am", "10:30 am", "10:45 am", "11:00 am", "11:15 am", "11:30 am", "11:45 am", "12:00 pm", "12:45 pm"));
+        sharedAvailableTimes.put("Monday", Arrays.asList("10:00 am", "10:15 am", "10:30 am", "10:45 am", "11:00 am",
+                "11:15 am", "11:30 am", "11:45 am", "12:00 pm", "12:45 pm"));
+        sharedAvailableTimes.put("Wednesday", Arrays.asList("02:00 pm", "02:15 pm", "02:30 pm", "02:45 pm",
+                "03:00 pm", "03:15 am", "03:30 pm", "03:45 pm", "04:00 pm", "04:45 pm"));
+        sharedAvailableTimes.put("Friday", Arrays.asList("04:00 pm", "04:15 pm", "04:30 pm", "04:45 pm", "05:00 pm", "05:15 pm", "05:30 pm",
+                "05:45 pm", "06:00 pm", "06:15 pm", "06:30 pm", "06:45 pm", "07:00 pm", "07:15 pm", "07:30 pm", "07:45 pm"));
+        sharedAvailableTimes.put("Saturday", Arrays.asList("09:00 am", "09:15 am", "09:30 am", "09:45 am", "10:00 am", "10:15 am", "10:30 am", "10:45 am",
+                "11:00 am", "11:15 am", "11:30 am", "11:45 am", "12:00 pm", "12:45 pm"));
+        //Dermatologist
 
-        Dermatologist dermatologist1 = new Dermatologist("Dr. Nayanathari", "thaari@aurora.com", "0123456789", "DR001", sharedAvailableTimes);
-        Dermatologist dermatologist2 = new Dermatologist("Dr. Nawariyan", "nawariyan@aurora.com", "9876543210", "DR002", sharedAvailableTimes);
+        Dermatologist dermatologist1 = new Dermatologist("Dr. Nayanathari", "thaari@aurora.com",
+                "0123456789", "DR001", sharedAvailableTimes);
+        Dermatologist dermatologist2 = new Dermatologist("Dr. Nawariyan", "nawariyan@aurora.com",
+                "9876543210", "DR002", sharedAvailableTimes);
 
         // Treatment options
         Map<Integer, String> treatmentOptions = new HashMap<>();
@@ -67,7 +74,8 @@ class Main {
 
 
     //Make a appointment
-    private static void makeAppointment(Dermatologist dermatologist1, Dermatologist dermatologist2, Map<Integer, String> treatmentOptions, Map<String, Double> treatmentPrices) {
+    private static void makeAppointment(Dermatologist dermatologist1, Dermatologist dermatologist2,
+                                        Map<Integer, String> treatmentOptions, Map<String, Double> treatmentPrices) {
         System.out.print("Name: ");
         String patientName = scanner.nextLine();
         System.out.print("Email: ");
@@ -108,14 +116,14 @@ class Main {
                     return;
                 }
 
-                String appointmentID = "App" + (new Random().nextInt(1, 10000) + 1);
+                String appointmentID = "App" + (new Random().nextInt(1, 100));
                 Appointment appointment = new Appointment(appointmentID, appointmentDate, appointmentTime, patient, selectedDermatologist);
                 appointments.add(appointment);
 
-                // Payment and treatment selection
+
                 System.out.println("A registration fee of LKR 500 is required to place the appointment.");
                 double registrationFee = 500.0;
-                double totalFee = registrationFee;
+
 
                 System.out.println("Choose treatment(s) (enter option numbers separated by commas, e.g., 1,2):");
                 treatmentOptions.forEach((option, treatment) -> System.out.println(option + ". " + treatment + " - LKR " + treatmentPrices.get(treatment)));
@@ -132,9 +140,9 @@ class Main {
                         treatmentCost += treatmentPrices.get(treatmentName);
                     }
                 }
-
-                double taxRate = 0.15;
-                double tax = treatmentCost * taxRate;
+                double totalCost = registrationFee + treatmentCost;
+                double taxRate = 0.025;
+                double tax = totalCost * taxRate;
                 double finalFee = registrationFee + treatmentCost + tax;
 
                 System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++");
@@ -156,9 +164,9 @@ class Main {
                 );
 
                 System.out.printf("| %-47s |\n", String.format("Total Treatment Cost: LKR %.2f", treatmentCost));
-                System.out.printf("| %-47s |\n", String.format("Tax (15%%): LKR %.2f", tax));
+                System.out.printf("| %-47s |\n", String.format("Tax (2.5%%): LKR %.2f", tax));
                 System.out.printf("| %-47s |\n", String.format("Final Total: LKR %.2f", finalFee));
-                System.out.println("| Payment Status: Paid                         |");
+                System.out.println("| Payment Status: Paid                           |");
                 System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++");
 
 
@@ -172,14 +180,14 @@ class Main {
 
 
 
-    private static boolean isTimeSlotAvailable(String date, String time) {
-        for (Appointment appointment : appointments) {
-            if (appointment.getApp_Date().equals(date) && appointment.getApp_Time().equals(time)) {
-                return false; // Time slot is already taken
-            }
-        }
-        return true; // Time slot is available
-    }
+//    private static boolean isTimeSlotAvailable(String date, String time) {
+//        for (Appointment appointment : appointments) {
+//            if (appointment.getApp_Date().equals(date) && appointment.getApp_Time().equals(time)) {
+//                return false; // Time slot is already taken
+//            }
+//        }
+//        return true; // Time slot is available
+//    }
 
 
 
@@ -204,7 +212,7 @@ class Main {
             System.out.print("Enter new date (e.g., Monday): ");
             String newDate = scanner.nextLine();
 
-            // for selected date has available times
+            // new selected day available times
             if (selectedDermatologist.getAvailableTimes().containsKey(newDate)) {
                 List<String> timeSlots = selectedDermatologist.getAvailableTimes().get(newDate);
                 System.out.println("Available times for " + newDate + ":");
@@ -213,18 +221,19 @@ class Main {
                 System.out.print("Enter new time (e.g., 10:15 am): ");
                 String newTime = scanner.nextLine();
 
-                // Time availability
+                // Check if selected time in the slot
                 if (timeSlots.contains(newTime)) {
-                    // Check if the new time slot is already booked
+
                     boolean isTimeSlotTaken = appointments.stream()
-                            .anyMatch(appt -> appt.getApp_Date().equals(newDate) && appt.getApp_Time().equals(newTime) && !appt.getApp_ID().equals(appointmentID));
+                            .anyMatch(appt -> appt.getApp_Date().equals(newDate) &&
+                                    appt.getApp_Time().equals(newTime) && !appt.getApp_ID().equals(appointmentID));
 
                     if (isTimeSlotTaken) {
                         System.out.println("The selected time slot is already booked. Please choose a different time.");
                         return;
                     }
 
-                    // Time availability update the appointment
+
                     appointment.updateAppointment(newDate, newTime);
                     System.out.println("Appointment updated successfully to " + newDate + " at " + newTime);
                 } else {
@@ -259,10 +268,10 @@ class Main {
         }
     }
 
-//    Search appointment
 
+    //    Search appointment
     private static void searchAppointment() {
-        System.out.println("Search by (1) Patient Name or (2) Appointment ID?");
+        System.out.println("Search by (1) Patient Name or (2) NIC Number?");
 
         if (scanner.hasNextInt()) {
             int searchOption = scanner.nextInt();
@@ -283,17 +292,20 @@ class Main {
                 System.out.println("No appointments found for the given patient name.");
 
             } else if (searchOption == 2) {
-                System.out.print("Enter appointment ID: ");
-                String appointmentID = scanner.nextLine();
-                Appointment appointment = findAppointmentByID(appointmentID);
+                System.out.print("Enter NIC number: ");
+                String nicNumber = scanner.nextLine();
 
-                if (appointment != null) {
-                    System.out.println("Appointment found: Patient - " + appointment.getPatient().getName() +
-                            ", Date: " + appointment.getApp_Date() +
-                            ", Time: " + appointment.getApp_Time());
-                } else {
-                    System.out.println("No appointments found for the given appointment ID.");
+                for (Appointment appointment : appointments) {
+                    if (appointment.getPatient().getNIC().equals(nicNumber)) {
+                        System.out.println("Appointment found: ID - " + appointment.getApp_ID() +
+                                ", Patient: " + appointment.getPatient().getName() +
+                                ", Date: " + appointment.getApp_Date() +
+                                ", Time: " + appointment.getApp_Time());
+                        return;
+                    }
                 }
+                System.out.println("No appointments found for the given NIC number.");
+
             } else {
                 System.out.println("Invalid search option. Please enter 1 or 2.");
             }
@@ -302,6 +314,7 @@ class Main {
             scanner.nextLine();
         }
     }
+
 
     // Find a appointment
     private static Appointment findAppointmentByID(String appointmentID) {
